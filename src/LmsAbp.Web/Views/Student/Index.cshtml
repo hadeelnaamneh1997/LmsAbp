@@ -1,0 +1,132 @@
+﻿@using LmsAbp.Students
+@model IReadOnlyList<StudentDto>
+
+@{
+    ViewData["Title"] = "Students";
+    Layout = "_Layout";
+}
+
+<h2>Students</h2>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createStudentModal">
+    Add Student
+</button>
+
+<table class="table-blue">
+    <thead>
+        <tr>
+            <th>National No.</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Enrollment</th>
+            <th>GPA</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.NationalNumber</td>
+                <td>@s.FirstName</td>
+                <td>@s.LastName</td>
+                <td>@s.Email</td>
+                <td>@s.EnrollmentDate.ToString("yyyy-MM-dd")</td>
+                <td>@s.GPA</td>
+                <td>@(s.IsActive ? "Yes" : "No")</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editStudentModal-@s.Id">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteStudentModal-@s.Id">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var s in Model)
+{
+    <div class="modal fade" id="editStudentModal-@s.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-primary">Edit Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @{
+                        ViewBag.StudentId = s.Id; 
+                    }
+
+                    <partial name="_UpdateStudent" model="new CreateUpdateStudentDto
+                                                   {
+                                                       NationalNumber = s.NationalNumber,
+                                                       FirstName = s.FirstName,
+                                                       LastName = s.LastName,
+                                                       DateOfBirth = s.DateOfBirth,
+                                                       Gender = s.Gender,
+                                                       Email = s.Email,
+                                                       PhoneNumber = s.PhoneNumber,
+                                                       Address = s.Address,
+                                                       EnrollmentDate = s.EnrollmentDate,
+                                                       GPA = s.GPA,
+                                                       IsActive = s.IsActive
+                                                   }" />
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteStudentModal-@s.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-danger">Delete Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <partial name="_DeleteStudent" model="s" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="createStudentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-light">
+                <h5 class="modal-title text-primary">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <partial name="_CreateStudent" model="new CreateUpdateStudentDto
+                                               {
+                                                   IsActive = true,
+                                                   EnrollmentDate = DateTime.Today
+                                               }" />
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+﻿@using LmsAbp.Courses
+@model IReadOnlyList<CourseDTO>
+
+@{
+    ViewData["Title"] = "Courses";
+    Layout = "_Layout";
+}
+
+<h2>Courses</h2>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createCourseModal">
+    Add Course
+</button>
+
+<table class="table-blue">
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Description</th>
+            <th>Credit Hours</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.CourseCode</td>
+                <td>@c.CourseName</td>
+                <td>@c.Description</td>
+                <td>@c.CreditHours</td>
+                <td>@(c.IsActive ? "Yes" : "No")</td>
+                <td>
+                    <button class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editCourseModal-@c.Id">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteCourseModal-@c.Id">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var c in Model)
+{
+    <div class="modal fade" id="editCourseModal-@c.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-primary">Edit Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @{
+                        ViewBag.CourseId = c.Id;   
+                    }
+
+                    <partial name="_UpdateCourse" model="new CreateUpdateCourseDto
+                                                  {
+                                                      CourseCode = c.CourseCode,
+                                                      CourseName = c.CourseName,
+                                                      Description = c.Description,
+                                                      CreditHours = c.CreditHours,
+                                                      IsActive = c.IsActive
+                                                  }" />
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteCourseModal-@c.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-danger">Delete Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <partial name="_DeleteCourse" model="c" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="createCourseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-light">
+                <h5 class="modal-title text-primary">Add Course</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <partial name="_CreateCourse" model="new CreateUpdateCourseDto { IsActive = true }" />
+            </div>
+
+        </div>
+    </div>
+</div>

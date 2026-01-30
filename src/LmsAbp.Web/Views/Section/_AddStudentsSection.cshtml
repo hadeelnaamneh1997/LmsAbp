@@ -1,0 +1,47 @@
+﻿@using System
+@using System.Linq
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using LmsAbp.Sections
+@model SectionDto
+
+<form asp-controller="Section"
+      asp-action="AddStudents"
+      asp-route-id="@Model.Id"
+      method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">
+            Select Students for Section: <strong>@(Model.SectionName ?? "")</strong>
+        </label>
+
+        @{
+            var students = ViewBag.Students as System.Collections.Generic.List<SelectListItem>
+            ?? new System.Collections.Generic.List<SelectListItem>();
+
+            var selected = Model.StudentIds ?? new System.Collections.Generic.List<Guid>();
+        }
+
+        <div class="list-group">
+            @foreach (var student in students)
+            {
+                var studentGuid = Guid.TryParse(student.Value, out var g) ? g : Guid.Empty;
+                var isChecked = studentGuid != Guid.Empty && selected.Contains(studentGuid);
+
+                <div class="form-check list-group-item">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="selectedStudentIds"
+                           value="@student.Value"
+                           @(isChecked ? "checked" : "") />
+                    <label class="form-check-label">@student.Text</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex justify-content-end">
+        <button type="submit" class="btn btn-success me-2">Save Students</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </div>
+</form>

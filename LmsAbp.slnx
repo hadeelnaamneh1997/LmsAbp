@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LmsAbp.Application.Contracts/LmsAbp.Application.Contracts.csproj" />
+    <Project Path="src/LmsAbp.Application/LmsAbp.Application.csproj" />
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Project Path="src/LmsAbp.DbMigrator/LmsAbp.DbMigrator.csproj" />
+    <Project Path="src/LmsAbp.Domain.Shared/LmsAbp.Domain.Shared.csproj" />
+    <Project Path="src/LmsAbp.Domain/LmsAbp.Domain.csproj" />
+    <Project Path="src/LmsAbp.EntityFrameworkCore/LmsAbp.EntityFrameworkCore.csproj" />
+    <Project Path="src/LmsAbp.HttpApi.Client/LmsAbp.HttpApi.Client.csproj" />
+    
+    
+    <Project Path="src/LmsAbp.HttpApi/LmsAbp.HttpApi.csproj" />
+    
+    
+    <Project Path="src/LmsAbp.Web/LmsAbp.Web.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/LmsAbp.Application.Tests/LmsAbp.Application.Tests.csproj" />
+    <Project Path="test/LmsAbp.Domain.Tests/LmsAbp.Domain.Tests.csproj" />
+    <Project Path="test/LmsAbp.EntityFrameworkCore.Tests/LmsAbp.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/LmsAbp.HttpApi.Client.ConsoleTestApp/LmsAbp.HttpApi.Client.ConsoleTestApp.csproj" />
+    
+    <Project Path="test/LmsAbp.TestBase/LmsAbp.TestBase.csproj" />
+    <Project Path="test/LmsAbp.Web.Tests/LmsAbp.Web.Tests.csproj" />
+  </Folder>
+</Solution>

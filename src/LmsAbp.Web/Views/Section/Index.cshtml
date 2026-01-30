@@ -1,0 +1,176 @@
+﻿@using LmsAbp.Sections
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model IReadOnlyList<SectionDto>
+
+@{
+    ViewData["Title"] = "Sections";
+    Layout = "_Layout";
+
+    var coursesList = ViewBag.Courses as List<SelectListItem> ?? new List<SelectListItem>();
+    var teachersList = ViewBag.Teachers as List<SelectListItem> ?? new List<SelectListItem>();
+
+    var courseMap = coursesList
+        .Where(x => !string.IsNullOrEmpty(x.Value))
+        .ToDictionary(x => x.Value!, x => x.Text);
+
+    var teacherMap = teachersList
+        .Where(x => !string.IsNullOrEmpty(x.Value))
+        .ToDictionary(x => x.Value!, x => x.Text);
+}
+
+<h2>All Sections</h2>
+
+<button type="button" class="btn btn-primary mb-3"
+        data-bs-toggle="modal" data-bs-target="#createSectionModal">
+    Add Section
+</button>
+
+<table class="table-blue">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Capacity</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Course</th>
+            <th>Teacher</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.SectionName</td>
+                <td>@s.Semester</td>
+                <td>@s.Capacity</td>
+                <td>@s.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@s.EndDate.ToString("yyyy-MM-dd")</td>
+
+                <td>@(courseMap.TryGetValue(s.CourseId.ToString(), out var cName) ? cName : s.CourseId.ToString())</td>
+                <td>@(teacherMap.TryGetValue(s.TeacherId.ToString(), out var tName) ? tName : s.TeacherId.ToString())</td>
+
+                <td>
+                    <button type="button" class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editSectionModal-@s.Id">
+                        Edit
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteSectionModal-@s.Id">
+                        Delete
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#studentsSectionModal-@s.Id">
+                        Add Students
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- CREATE MODAL -->
+<div class="modal fade" id="createSectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Add Section</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <partial name="_CreateSection" model="new CreateUpdateSectionDto
+                                               {
+                                                   StartDate = DateTime.Today,
+                                                   EndDate = DateTime.Today.AddMonths(3),
+                                                   Capacity = 30
+                                               }" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@foreach (var s in Model)
+{
+    <!-- EDIT MODAL -->
+    <div class="modal fade" id="editSectionModal-@s.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Section - @s.SectionName</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @{
+                        ViewBag.SectionId = s.Id;
+                    }
+
+                    <partial name="_UpdateSection" model="new CreateUpdateSectionDto
+                                                   {
+                                                       SectionName = s.SectionName ?? string.Empty,
+                                                       Semester = s.Semester ?? string.Empty,
+                                                       Capacity = s.Capacity,
+                                                       StartDate = s.StartDate,
+                                                       EndDate = s.EndDate,
+                                                       CourseId = s.CourseId,
+                                                       TeacherId = s.TeacherId,
+                                                       StudentIds = s.StudentIds ?? new List<Guid>()
+                                                   }" />
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="modal fade" id="deleteSectionModal-@s.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Section - @s.SectionName</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <partial name="_DeleteSection" model="s" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENTS MODAL -->
+    <div class="modal fade" id="studentsSectionModal-@s.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Students - @s.SectionName</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                @{
+                        ViewBag.SectionId = s.Id;
+                        ViewBag.SelectedStudentIds = s.StudentIds ?? new List<Guid>();
+                    }
+
+                    <partial name="_AddStudentsSection" model="s" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

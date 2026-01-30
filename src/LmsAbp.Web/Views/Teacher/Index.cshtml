@@ -1,0 +1,130 @@
+﻿@using LmsAbp.Teachers
+@model IReadOnlyList<TeacherDto>
+
+@{
+    ViewData["Title"] = "Teachers";
+    Layout = "_Layout";
+}
+
+<h2>Teachers</h2>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createTeacherModal">
+    Add Teacher
+</button>
+
+<table class="table-blue">
+    <thead>
+        <tr>
+            <th>National ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Specialization</th>
+            <th>Experience</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.NationalId</td>
+                <td>@t.FirstName</td>
+                <td>@t.LastName</td>
+                <td>@t.Email</td>
+                <td>@t.Specialization</td>
+                <td>@t.YearsOfExperience</td>
+                <td>@(t.IsActive ? "Yes" : "No")</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editTeacherModal-@t.Id">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteTeacherModal-@t.Id">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var t in Model)
+{
+    <div class="modal fade" id="editTeacherModal-@t.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-primary">Edit Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    @{
+                        ViewBag.TeacherId = t.Id; 
+                    }
+
+                    <partial name="_UpdateTeacher" model="new CreateUpdateTeacherDto
+                                                   {
+                                                       FirstName = t.FirstName,
+                                                       LastName = t.LastName,
+                                                       NationalId = t.NationalId,
+                                                       DateOfBirth = t.DateOfBirth,
+                                                       Email = t.Email,
+                                                       PhoneNumber = t.PhoneNumber,
+                                                       Specialization = t.Specialization,
+                                                       YearsOfExperience = t.YearsOfExperience,
+                                                       HireDate = t.HireDate,
+                                                       IsActive = t.IsActive
+                                                   }" />
+            </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteTeacherModal-@t.Id" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title text-danger">Delete Teacher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <partial name="_DeleteTeacher" model="t" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="createTeacherModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-light">
+                <h5 class="modal-title text-primary">Add Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <partial name="_CreateTeacher" model="new CreateUpdateTeacherDto
+                                               {
+                                                   IsActive = true,
+                                                   HireDate = DateTime.Today
+                                               }" />
+            </div>
+
+        </div>
+    </div>
+</div>

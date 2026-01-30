@@ -1,0 +1,88 @@
+﻿@addTagHelper *, Volo.Abp.AspNetCore.Mvc.UI.Bundling
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LMS</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="~/assets/vendors/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="~/assets/css/style.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <abp-style-bundle name="Global" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper">
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="nav-profile-text">
+                                <span class="font-weight-bold mb-2">Admin</span>
+                                <span class="text-secondary text-small">LMS System</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Teacher" asp-action="Index">
+                            <span class="menu-title">Teachers</span>
+                            <i class="mdi mdi-account-tie menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Student" asp-action="Index">
+                            <span class="menu-title">Students</span>
+                            <i class="mdi mdi-account-group menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Course" asp-action="Index">
+                            <span class="menu-title">Courses</span>
+                            <i class="mdi mdi-book-open-variant menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Section" asp-action="Index">
+                            <span class="menu-title">Sections</span>
+                            <i class="mdi mdi-view-list menu-icon"></i>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+
+                <footer class="footer border-top text-muted">
+                    <div class="container"></div>
+                </footer>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="~/assets/js/off-canvas.js"></script>
+    <script src="~/assets/js/misc.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <abp-script-bundle name="Global" />
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
