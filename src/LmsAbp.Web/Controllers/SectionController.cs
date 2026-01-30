@@ -119,7 +119,6 @@ namespace LmsAbp.Web.Controllers
             if (teacherId.HasValue)
                 query = query.Where(x => x.TeacherId == teacherId.Value);
 
-            // ✅ isFull فلترة فقط إذا المستخدم اختارها
             if (isFull.HasValue)
             {
                 if (isFull.Value)
